@@ -1,0 +1,46 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: service-product
+  profiles:
+    active: public
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      config:
+        import-check:
+          enabled: false
+        namespace: ${spring.profiles.active:public}
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+      eager: true
+
+logging:
+  level:
+    com.bryan.order.client: debug
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+    import:
+      - nacos:common.yaml?group=product
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+    import:
+      - nacos:common.yaml?group=product
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+    import:
+      - nacos:common.yaml?group=product
